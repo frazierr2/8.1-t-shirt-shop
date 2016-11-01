@@ -6,9 +6,9 @@ var catModels = require('../models/catalog');
 
 var TemplateContainer = require('./template.jsx').TemplateContainer;
 
-var CatalogItems = React.createClass({
+var CatalogListing = React.createClass({
   render: function() {
-console.log(this.props.catalogItems);
+// console.log(this.props.catalogItems);
     var catalogList = this.props.catalogItems.map(function(item){
       return(
         <div key={item.cid} className="col-sm-6 col-md-4">
@@ -36,7 +36,9 @@ console.log(this.props.catalogItems);
       );
     });
     return (
-    {catalogList}
+      <div>
+        {catalogList}
+      </div>
   );
   }
 });
@@ -44,29 +46,35 @@ console.log(this.props.catalogItems);
 var CatalogContainer = React.createClass({
   getInitialState: function(){
     var catalogItems = new catModels.TshirtCollection();
+    // console.log(catalogItems);
     catalogItems.add([
       {title:'Saved By The Bell',image:'https://80stees.imgix.net/s/files/1/0384/0921/products/tiger-face-saved-by-the-bell-t-shirt.col.jpeg?v=1416415283&auto=format&dpr=1.5&fit=max&h=300&w=196&'},
       {title:'Whooooo',image:'https://80stees.imgix.net/s/files/1/0384/0921/products/jet-flyin-ric-flair-t-shirt.main.jpeg?v=1453741500&auto=format&fit=max&h=1500&w=1500&'},
-      {title:'Whooooo',image:'http://mypartyshirt.com/media/catalog/product/cache/1/image/1000x1231/9df78eab33525d08d6e5fb8d27136e95/c/i/cimg5599_edited.jpg'}
+      {title:'Laces Out',image:'http://mypartyshirt.com/media/catalog/product/cache/1/image/1000x1231/9df78eab33525d08d6e5fb8d27136e95/c/i/cimg5599_edited.jpg'}
     ]);
-
+    // console.log(catalogItems);
     return {
       catalogItems: catalogItems
     }
+  },
+  navBarCart: function(){
+    var router = this.props.router;
+    router.navigate('shoppingcart/',{trigger: true});
+  },
+  addToCart: function(items){
+    localStorage.setItem('order', JSON.stringify(items));
   },
 
   render: function(){
     return(
       <TemplateContainer>
-        <CatalogItems catalogItems={this.state.catalogItems} />
+        <CatalogListing catalogItems={this.state.catalogItems} addToCart={this.addToCart}/>
       </TemplateContainer>
-    )
-
+    );
   }
 });
 
 
 module.exports = {
-  CatalogItems: CatalogItems,
   CatalogContainer: CatalogContainer
 }

@@ -5,14 +5,14 @@ var TemplateContainer = React.createClass({
     return (
       <div className="container-fluid">
 
-        <nav className="navbar navbar-default ">
+        <nav className="navbar navbar-default navbar">
           <ul className="nav nav-pills banner">
-            <a className="navbar-brand" href="#">90's Throwbacks</a>
+            <a className="navbar-brand nav-text" href="#">90's Throwbacks</a>
             <a className="navbar-brand logo" href="#">
               <img alt="Brand" src="http://4.bp.blogspot.com/-EGaXF8LlZ_s/TZ3736JBGzI/AAAAAAAAADY/roDdnwix4SU/s1600/I%2Blove%2Bthe%2B90s.png" />
             </a>
             <li role="presentation" className="active"><a href="#">T-shirts</a></li>
-            <li role="presentation"><a href="#">Cart</a></li>
+            <li role="presentation"><a href="shoppingcart/"  className="nav-text">Cart</a></li>
           </ul>
         </nav>
 
@@ -28,7 +28,7 @@ var TemplateContainer = React.createClass({
         <div className="row">
 
 
-
+            {this.props.children}
 
       </div>
       </div>
