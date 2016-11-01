@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Backbone = require('backbone');
 
-var CatalogContainer = require('./catalog.jsx').CatalogContainer;
+var CatalogContainer = require('./components/catalog.jsx').CatalogContainer;
 
 var AppRouter = Backbone.Router.extend({
   routes: {
