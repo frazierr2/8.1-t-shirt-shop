@@ -8,7 +8,7 @@ var CatalogContainer = require('./components/catalog.jsx').CatalogContainer;
 var AppRouter = Backbone.Router.extend({
   routes: {
     '': 'index',
-    'shoppingcart/': 'shoppingcart'
+    'cart/': 'cart'
   },
   index: function(){
     ReactDOM.render(
@@ -16,7 +16,7 @@ var AppRouter = Backbone.Router.extend({
       document.getElementById('app')
     );
   },
-  shoppingcart: function(){
+  cart: function(){
     ReactDOM.render(
       React.createElement(CartContainer, {router: this}),
       document.getElementById('app')

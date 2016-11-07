@@ -1,14 +1,41 @@
 var React = require('react');
 var Backbone = require('backbone');
 require('backbone-react-component');
+var Modal = require('react-modal');
+
 
 var catModels = require('../models/catalog');
+var Item = require('../models/cart').Item;
+var ItemCollection = require('../models/cart').ItemCollection;
 
 var TemplateContainer = require('./template.jsx').TemplateContainer;
 
 var CatalogListing = React.createClass({
+getInitialState: function(){
+  var newOrder = new Item();
+  return {
+    newOrder: newOrder
+  }
+},
+
+handleQty: function(e){
+  e.preventDefault();
+  this.state.newOrder.set({quantity: e.target.value});
+},
+
+handleShirtSize: function(e){
+  e.preventDefault();
+  this.state.newOrder.set({size: e.target.value});
+},
+
+handleSubmit: function(item){
+  this.state.newOrder.set({title: item.get('title'), 'time_submitted': new Date().getTime(), 'time_expires': new Date().getTime() + 600000});
+  this.setState({newOrder: this.state.newOrder});
+  this.props.addToCard(this.state.newOrder);
+},
   render: function() {
-// console.log(this.props.catalogItems);
+    var self = this;
+
     var catalogList = this.props.catalogItems.map(function(item){
       return(
         <div key={item.cid} className="col-sm-6 col-md-4">
@@ -17,18 +44,18 @@ var CatalogListing = React.createClass({
             <div className="caption">
               <h3>{item.get('title')}</h3>
               <p>This shirt is so amazing that it will make you amazing when you wear it.</p>
-              <form className="form-inline">
+              <form onSubmit={function(e){e.preventDefault();self.handleSubmit(item);}} className="form-inline">
                 <div className="form-group qty-input">
-                  <input type="text" className="form-control" id="quantity" placeholder="Qty" />
+                  <input onChange={self.handleQty} type="text" className="form-control" id="quantity" placeholder="Qty" />
                 </div>
-                <select className="form-control">
+                <select onChange={self.handleShirtSize} className="form-control">
                   <option>SM</option>
                   <option>MD</option>
                   <option>LG</option>
                   <option>XL</option>
                   <option>XXL</option>
                 </select>
-                <a href="#" className="btn btn-primary" role="button">Add to Cart</a>
+                <button className="btn btn-primary" role="button">Add to Cart</button>
               </form>
             </div>
           </div>
@@ -46,29 +73,54 @@ var CatalogListing = React.createClass({
 var CatalogContainer = React.createClass({
   getInitialState: function(){
     var catalogItems = new catModels.TshirtCollection();
-    // console.log(catalogItems);
-    catalogItems.add([
-      {title:'Saved By The Bell',image:'https://80stees.imgix.net/s/files/1/0384/0921/products/tiger-face-saved-by-the-bell-t-shirt.col.jpeg?v=1416415283&auto=format&dpr=1.5&fit=max&h=300&w=196&'},
-      {title:'Whooooo',image:'https://80stees.imgix.net/s/files/1/0384/0921/products/jet-flyin-ric-flair-t-shirt.main.jpeg?v=1453741500&auto=format&fit=max&h=1500&w=1500&'},
-      {title:'Laces Out',image:'http://mypartyshirt.com/media/catalog/product/cache/1/image/1000x1231/9df78eab33525d08d6e5fb8d27136e95/c/i/cimg5599_edited.jpg'}
-    ]);
-    // console.log(catalogItems);
+    var orderCart = new ItemCollection();
+
     return {
-      catalogItems: catalogItems
+      user: '',
+      catalogItems: catalogItems,
+      orderCart: orderCart
     }
   },
-  navBarCart: function(){
-    var router = this.props.router;
-    router.navigate('shoppingcart/',{trigger: true});
+
+  toStorage: function(toCollection){
+    var cart = JSON.stringify(toCollection.toJSON());
+    localStorage.setItem('cart', cart);
   },
-  addToCart: function(items){
-    localStorage.setItem('order', JSON.stringify(items));
+
+  setUser: function(e){
+    e.preventDefault();
+    this.setState({user: localStorage.getItem('user')});
   },
+
+
+  fromStorage: function(){
+    var collection = JSON.parse(localStorage.getItem('cart'));
+    this.state.orderCart.reset(collection);
+    this.setState({orderCart: this.state.orderCart});
+  },
+
+  addToCart: function(itemToAdd){
+    var orderCart = this.state.orderCart;
+    this.fromStorage();
+    orderCart.add(itemToAdd);
+    this.setState({orderCart: orderCart});
+    this.toStorage(orderCart);
+  },
+
+  componentWillMount: function(){
+    var self = this;
+    this.state.catalogItems.fetch().then(function(inventory){
+      self.setState({catalogItems: self.state.catalogItems});
+    });
+  },
+
 
   render: function(){
     return(
       <TemplateContainer>
+
         <CatalogListing catalogItems={this.state.catalogItems} addToCart={this.addToCart}/>
+
       </TemplateContainer>
     );
   }

@@ -12,7 +12,7 @@ var TemplateContainer = React.createClass({
               <img alt="Brand" src="http://4.bp.blogspot.com/-EGaXF8LlZ_s/TZ3736JBGzI/AAAAAAAAADY/roDdnwix4SU/s1600/I%2Blove%2Bthe%2B90s.png" />
             </a>
             <li role="presentation" className="active"><a href="#">T-shirts</a></li>
-            <li role="presentation"><a href="shoppingcart/"  className="nav-text">Cart</a></li>
+            <li role="presentation"><a href="#/cart/"  className="nav-text">Cart</a></li>
           </ul>
         </nav>
 
