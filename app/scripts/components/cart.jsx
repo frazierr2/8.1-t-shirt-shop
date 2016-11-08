@@ -28,7 +28,7 @@ var CartItems = React.createClass({
        time='expired';
        self.removeItem(index);
      }else{
-       var minutes = ((timeTillExpire/60000)%60).toFixed(0);
+       var minutes = ((timeTillExpire/70000)%60).toFixed(0);
        minutes = (minutes < 10) ? '0' + minutes : minutes;
 
        var seconds = ((timeTillExpire/1000)%60).toFixed(0);
