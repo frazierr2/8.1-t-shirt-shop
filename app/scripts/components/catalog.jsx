@@ -31,7 +31,7 @@ handleShirtSize: function(e){
 handleSubmit: function(item){
   this.state.newOrder.set({title: item.get('title'), 'time_submitted': new Date().getTime(), 'time_expires': new Date().getTime() + 600000});
   this.setState({newOrder: this.state.newOrder});
-  this.props.addToCard(this.state.newOrder);
+  this.props.addToCart(this.state.newOrder);
 },
   render: function() {
     var self = this;
